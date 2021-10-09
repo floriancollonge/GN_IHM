@@ -1,24 +1,22 @@
-import Vue from "vue"
-import Router from "vue-router"
-import StartScreen from "./views/default/StartScreen.vue"
+import { createWebHistory, createRouter } from "vue-router";
+import HelloWorld from './components/StartScreen.vue'
 
 var metaDatas = {
   title: ""
 }
 
-Vue.use(Router)
+const routes = [
+  {
+    path: "/",
+    meta: metaDatas,
+    name: "start",
+    component: HelloWorld
+  }
+];
 
-const router = new Router({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: "/",
-      meta: metaDatas,
-      name: "start",
-      component: StartScreen
-    }
-  ]
-})
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
 
-export default router
+export default router;

@@ -1,8 +1,7 @@
-import vuetify from "./plugins/vuetify"
+import { createApp } from 'vue'
 import App from './App.vue'
+import routerCustom from "./router"
 
-new Vue({
-    vuetify,
-    router,
-    render: h => h(App)
-  }).$mount("#app")
+createApp(App)
+    .use(routerCustom)
+    .mount('#app')
