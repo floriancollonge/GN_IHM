@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import HelloWorld from './components/StartScreen.vue'
+import ContactList from './views/ContactList.vue'
 
 var metaDatas = {
   title: ""
@@ -9,8 +9,8 @@ const routes = [
   {
     path: "/",
     meta: metaDatas,
-    name: "start",
-    component: HelloWorld
+    name: "ContactList",
+    component: ContactList
   }
 ];
 
