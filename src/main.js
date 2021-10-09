@@ -1,4 +1,8 @@
-import { createApp } from 'vue'
+import vuetify from "./plugins/vuetify"
 import App from './App.vue'
 
-createApp(App).mount('#app')
+new Vue({
+    vuetify,
+    router,
+    render: h => h(App)
+  }).$mount("#app")
