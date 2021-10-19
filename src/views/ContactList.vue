@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-  name: "resetPassword",
+  name: "ContactList",
   data() {
     return {
       enter: true,
