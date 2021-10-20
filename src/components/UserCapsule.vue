@@ -1,7 +1,7 @@
 <template>
   <div class="user-capsule">
-    <span class="user-capsule-img"><img src="https://img.icons8.com/glyph-neue/64/000000/panda.png"/></span>
-    <span class="user-capsule-name">{{name}}</span>
+    <img class="user-capsule-img" src="../assets/icon_panda.png"/>
+    <div class="user-capsule-name">{{name}}</div>
   </div>
 </template>
 <script>
@@ -26,11 +26,20 @@ export default {
 <style scoped>
 .user-capsule {
     background-color: white;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 
-.user-capsule-img, .user-capsule-name {
-    width: 45px;
-    height: 45px;
+.user-capsule-img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.user-capsule-name {
+  width: 100%;
+  text-align: center;
 }
 
 </style>

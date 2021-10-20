@@ -54,4 +54,10 @@ export default {
   opacity: 0;
 }
 
+.start-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 </style>
