@@ -1,18 +1,22 @@
 <template>
   <div class="content-centered start-screen" style="padding: 0 !important">
-    <div v-for="user in users" :key=user.id_user>
+    <div v-for="user in users" :key=user.idUser @click="selectUser(user.idUser)">
       <transition name="fade">
         <user-capsule :name="user.firstName + ' ' + user.lastName"></user-capsule>
       </transition>
     </div>
+    <transition name="fade">
+      <add-user-capsule @click="addUser()"></add-user-capsule>
+    </transition>
   </div>
 </template>
 <script>
 import axios from "axios"
 import UserCapsule from "../components/UserCapsule"
+import AddUserCapsule from "../components/AddUserCapsule"
 
 export default {
-  name: "StartScreen",
+  name: "startScreen",
   data() {
     return {
       users: []
@@ -28,10 +32,16 @@ export default {
       .catch(error => console.log(error))
   },
   methods: {
-    
+    selectUser(idUser) {
+      sessionStorage.setItem("idUser", idUser);
+    },
+    addUser() {
+      alert("Be patient, it will be available soon !");
+    }
   },
   components: {
-    "user-capsule": UserCapsule
+    "user-capsule": UserCapsule,
+    "add-user-capsule": AddUserCapsule
   }
 }
 </script>

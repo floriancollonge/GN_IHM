@@ -1,19 +1,18 @@
 <template>
   <div class="user-capsule">
-    <img class="user-capsule-img" :src="require('../assets/icon_panda.png')"/>
-    <div class="user-capsule-name">{{name}}</div>
+    <img class="user-capsule-img" :src="require('../assets/plus.png')"/>
+    <div class="user-capsule-name">Add a new user</div>
   </div>
 </template>
 <script>
 export default {
-  name: "userCapsule",
+  name: "addUserCapsule",
   data() {
     return {
     }
   },
-  props: ["name"],
   methods: {
-
+    
   }
 }
 </script>
