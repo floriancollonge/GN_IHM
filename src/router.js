@@ -11,7 +11,7 @@ const routes = [
   {
     path: "/",
     meta: metaDatas,
-    name: "StartScreeen",
+    name: "StartScreen",
     component: StartScreen
   },
   {
