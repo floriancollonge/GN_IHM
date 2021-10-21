@@ -1,24 +1,28 @@
 <template>
   <div class="menu">
-      <span>Salut !!!</span>
+      <menu-item css="fas fa-users" label="Prospects"></menu-item>
   </div>
 </template>
 <script>
+import MenuItem from "./MenuItem"
 export default {
-  name: "Menu",
-  data() {
-    return {
+    name: "Menu",
+    data() {
+        return {
+        }
+    },
+    methods: {
+        
+    },
+    components: {
+        "menu-item": MenuItem
     }
-  },
-  methods: {
-    
-  }
 }
 </script>
 
 <style scoped>
 .menu {
     height: 100%;
-    border-right: solid 1px black;
+    border: solid 1px black;
 }
 </style>
