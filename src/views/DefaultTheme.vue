@@ -3,7 +3,9 @@
         <div class="left-side-menu">
             <Menu></Menu>
         </div>
-        <router-view></router-view>
+        <div class="center-panel">
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
@@ -37,6 +39,12 @@ body {
 .left-side-menu {
     float: left;
     width: 300px;
+    height: 100vh;
+}
+
+.center-panel {
+    float: left;
+    width: calc(100% - 300px);
     height: 100vh;
 }
 </style>

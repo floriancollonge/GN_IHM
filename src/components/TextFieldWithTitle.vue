@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: "addUserCapsule",
+  name: "TextFieldWithTitle",
   data() {
     return {
     }
@@ -22,8 +22,7 @@ export default {
 <style scoped>
 .input-container{
   float: left; 
-  width: 27.33%; 
-  margin: 40px 3%; 
+  margin-top: 20px; 
   position: relative;
 } /* necessary to give position: relative to parent. */
 
