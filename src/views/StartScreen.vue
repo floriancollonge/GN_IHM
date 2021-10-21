@@ -34,6 +34,7 @@ export default {
   methods: {
     selectUser(idUser) {
       sessionStorage.setItem("idUser", idUser);
+      this.$router.push({ name: "ContactList" })
     },
     addUser() {
       alert("Be patient, it will be available soon !");
