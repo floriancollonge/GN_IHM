@@ -12,7 +12,7 @@
             </thead>
             <tbody v-if="datas && datas.length > 0">
                 <tr v-for="data in datas" :key="data.id">
-                    <td>{{data.lastName}} + " " + {{data.firstName}}</td>
+                    <td>{{data.lastName + " " + data.firstName}}</td>
                     <td>{{data.companyName}}</td>
                     <td>{{data.idStep}}</td>
                     <td>{{data.idTag}}</td>
@@ -30,14 +30,27 @@ export default {
     name: "ContactDatatable",
     data() {
         return {
+            datas: [{
+                id: "1",
+                firstName: "Soham",
+                lastName: "Watson",
+                companyName: "Carrefour"
+            },
+            {
+                id: "2",
+                firstName: "Bernard",
+                lastName: "Pena",
+                companyName: "Alteca"
+            }]
         }
     },
     methods: {
         
     },
-    components: {
+    created() {
     },
-    props: ["datas"]
+    components: {
+    }
 }
 </script>
 
@@ -55,7 +68,11 @@ table {
 }
 
 tr, thead {
-    border-bottom: solid 1px black;
+    border-bottom: solid 1px #E1E1E1;
+}
+
+td {
+    text-align: center;
 }
 
 .no-contact {

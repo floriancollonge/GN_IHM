@@ -9,7 +9,7 @@
                 <text-field placeholder="Quick search" class="quick-search"></text-field>
             </div>
             <div>
-                <data-table :datas="contacts"></data-table>
+                <data-table></data-table>
             </div>
         </div>
     </div>
@@ -22,8 +22,7 @@ export default {
   name: "ContactList",
   data() {
     return {
-      label: "",
-      contacts: []
+      label: ""
     }
   },
   created() {
@@ -32,8 +31,6 @@ export default {
       .get('http://localhost:5003/v1/prospects')
       .then(function (response) {
         instance.contacts = Object.assign([], response.data);
-        console.log("contacts " + JSON.stringify(response.data));
-        console.log(instance.contacts);
       })
       .catch(error => console.log(error));
   },
@@ -57,6 +54,7 @@ export default {
 
 .prospect-list {
   padding-left: 15px;
+  padding-right: 15px;
 }
 
 .quick-search {
