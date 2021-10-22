@@ -29,7 +29,7 @@ export default {
       .then(function (response) {
         instance.users = Object.assign([], response.data);
       })
-      .catch(error => console.log(error))
+      .catch(error => console.log(error));
   },
   methods: {
     selectUser(idUser) {

@@ -23,6 +23,6 @@ export default {
 <style scoped>
 .menu {
     height: 100%;
-    border: solid 1px black;
+    border-right: solid 1px black;
 }
 </style>
