@@ -1,7 +1,11 @@
-import { createWebHistory, createRouter } from "vue-router";
+import Router from "vue-router"
+import Vue from 'vue';
+
 import ContactList from './views/ContactList.vue'
 import StartScreen from './views/StartScreen.vue'
 import DefaultTheme from './views/DefaultTheme.vue'
+
+Vue.use(Router);
 
 var metaDatas = {
   title: ""
@@ -30,10 +34,10 @@ const routes = [
   }
   
 ];
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
+const router = new Router({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes: routes
 });
 
 export default router;
