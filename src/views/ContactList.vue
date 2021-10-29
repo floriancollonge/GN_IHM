@@ -5,147 +5,96 @@
         </div>
         <div class="prospect-list">
             <div>
-                <v-card>
-                    <v-card-title>
-                      All contacts
-                      <v-spacer></v-spacer>
-                      <v-text-field
-                        v-model="search"
-                        :append-icon="'fa-search'"
-                        label="Quick search"
-                        single-line
-                        hide-details
-                      ></v-text-field>
-                    </v-card-title>
 
                 <v-data-table
                     :headers="datatable_headers"
                     :items="datatable_items"
                     item-key="name"
                     loading-text="Loading... Please wait"
-                    hide-default-footer
-                    disable-sort
+                    multi-sort
+                    :search="search"
+                    :footer-props="{
+                      showFirstLastPage: true,
+                      firstIcon: 'fas fa-fast-backward',
+                      lastIcon: 'fas fa-fast-forward',
+                      prevIcon: 'fas fa-step-backward',
+                      nextIcon: 'fas fa-step-forward'
+                    }"
               >
-          <!-- <template v-slot:item.winery="{ item }">
-            <div class="inner-div" v-on:click="cellarWineDetails(item.cellar_wine)">
-              {{ item.winery }}
-            </div>
-          </template>
-          <template v-slot:item.region="{ item }">
-            <div class="inner-div" v-on:click="cellarWineDetails(item.cellar_wine)">
-              {{ item.region }}
-            </div>
-          </template>
-          <template v-slot:item.appellation="{ item }">
-            <div class="inner-div" v-on:click="cellarWineDetails(item.cellar_wine)">
-              {{ item.appellation }}
-            </div>
-          </template>
-          <template v-slot:item.vintage="{ item }">
-            <div class="inner-div" v-on:click="cellarWineDetails(item.cellar_wine)">
-              {{ item.vintage }}
-            </div>
-          </template>
-          <template v-slot:item.type="{ item }">
-            <div class="inner-div" v-on:click="cellarWineDetails(item.cellar_wine)">
-              {{ item.type }}
-            </div>
-          </template>
-          <template v-slot:item.cellar_potential="{ item }">
-            <div v-if="item.cellar_potential == 1">
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <img
-                    class="icon-waiting"
-                    v-bind="attrs"
-                    v-on="on"
-                    src="@/assets/images/icons/wine.svg"
-                  />
-                </template>
-                <span>This wine has yet to attain it's full potential.</span>
-              </v-tooltip>
-            </div>
-            <div v-else-if="item.cellar_potential == 2">
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <img
-                    class="icon-increase"
-                    v-bind="attrs"
-                    v-on="on"
-                    src="@/assets/images/icons/wine.svg"
-                  />
-                </template>
-                <span>This wine quality is good, but still increasing.</span>
-              </v-tooltip>
-            </div>
-            <div v-else-if="item.cellar_potential == 3">
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <img
-                    class="icon-apogee"
-                    v-bind="attrs"
-                    v-on="on"
-                    src="@/assets/images/icons/wine.svg"
-                  />
-                </template>
-                <span>This wine is at its peak.</span>
-              </v-tooltip>
-            </div>
-            <div v-else-if="item.cellar_potential == 4">
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon large class="icon-decrease" color="black" v-bind="attrs" v-on="on"
-                    >fa-exclamation-triangle</v-icon
+              <template v-slot:top>
+                  <v-toolbar
+                    flat
                   >
+                    <v-toolbar-title class="contact-title">All contacts</v-toolbar-title>
+                    <v-text-field
+                        v-model="search"
+                        class="quick-search"
+                        :append-icon="'fa-search'"
+                        label="Quick search"
+                        single-line
+                        hide-details
+                    ></v-text-field>
+                    <v-spacer></v-spacer>
+                    <v-dialog
+                      v-model="dialog"
+                      max-width="500px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          color="primary"
+                          dark
+                          class="mb-2"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          New contact
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                        </v-card-title>
+            
+                        <v-card-text>
+                          <v-container>
+                          </v-container>
+                        </v-card-text>
+            
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                          >
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                          >
+                            Save
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
                 </template>
-                <span>This wine quality has passed it's peak, and is decreasing.</span>
-              </v-tooltip>
-            </div>
-            <div v-else>-</div>
-          </template>
-          <template v-slot:item.qty="{ item }">
-            <div class="qty-field">
-              <v-text-field
-                v-model="item.qty"
-                placeholder="120"
-                @change="qtyChanged(item.id_cellar_wine, item.qty)"
-              ></v-text-field>
-            </div>
-            <div v-if="item.qty < 24" class="low-stock">Low stock</div>
-          </template>
-          <template v-slot:item.favorite="{ item }">
-            <div class="wine-favorite" @click="toggleFavorite(item.id_wine, item.favorite)">
-              <i
-                v-if="item.favorite"
-                class="favorite fas fa-heart"
-                title="Remove from your favorites"
-              ></i>
-              <i v-else class="far fa-heart" title="Add to your favorites"></i>
-            </div>
-          </template>
-          <template v-slot:item.id_wine="{ item }">
-            <div class="rating-div">
-              <rating :idWine="item.id_wine"></rating>
-            </div>
-          </template> -->
-                              <template v-slot:link="{ item }">
-                                  <v-icon small @click="stockDetails(item.id_stock, true)">fa-info-circle</v-icon>
-                                  <v-icon
-                                    small
-                                    v-if="
-                                      canManage() &&
-                                      item.status !=
-                                        stockStatus.filter(ss => {
-                                          return ss.value === 2
-                                        })[0].label
-                                    "
-                                    @click="showConfirmDelete(item.id_stock, true)"
-                                    title="Close the stock"
-                                    >fa-trash</v-icon
-                                  >
-                                </template>
-                            </v-data-table>
-                        </v-card>
+                <template v-slot:link="{ item }">
+                    <v-icon small @click="stockDetails(item.id_stock, true)">fa-info-circle</v-icon>
+                    <v-icon
+                      small
+                      v-if="
+                        canManage() &&
+                        item.status !=
+                          stockStatus.filter(ss => {
+                            return ss.value === 2
+                          })[0].label
+                      "
+                      @click="showConfirmDelete(item.id_stock, true)"
+                      title="Close the stock"
+                      >fa-trash</v-icon
+                    >
+                  </template>
+              </v-data-table>
             </div>
         </div>
     </div>
@@ -156,7 +105,8 @@ export default {
   name: "ContactList",
   data() {
     return {
-      label: "",
+      search: "",
+      dialog: false,
       datatable_headers: [
         {
           text: "Name",
@@ -189,7 +139,71 @@ export default {
           sortable: false
         }
       ],
-      datatable_items: []
+      datatable_items: [{
+        name: "Adrien",
+        company_name: "Test"
+      },{
+        name: "Adrien2",
+        company_name: "Test"
+      },{
+        name: "Adrien3",
+        company_name: "Test2"
+      },{
+        name: "Adrien4",
+        company_name: "Test2"
+      },{
+        name: "Adrien5",
+        company_name: "Test3"
+      },{
+        name: "Adrien6",
+        company_name: "Test3"
+      },{
+        name: "Adrien7",
+        company_name: "Test4"
+      },{
+        name: "Adrien8",
+        company_name: "Test4"
+      },{
+        name: "Adrien9",
+        company_name: "Test5"
+      },{
+        name: "Adrien10",
+        company_name: "Test5"
+      },{
+        name: "Adrien11",
+        company_name: "Test6"
+      },{
+        name: "Adrien12",
+        company_name: "Test6"
+      },{
+        name: "Adrien13",
+        company_name: "Test7"
+      },{
+        name: "Adrien14",
+        company_name: "Test7"
+      },{
+        name: "Adrien15",
+        company_name: "Test7"
+      },{
+        name: "Adrien16",
+        company_name: "Test8"
+      },{
+        name: "Adrien17",
+        company_name: "Test8"
+      },{
+        name: "Adrien18",
+        company_name: "Test5"
+      },{
+        name: "Adrien19",
+        company_name: "Test4"
+      },{
+        name: "Adrien 20",
+        company_name: "Test2"
+      },{
+        name: "Adrien 21",
+        company_name: "Test"
+      }
+      ]
     }
   },
   created() {
@@ -215,9 +229,9 @@ export default {
 
 .contact-title {
   /* font-weight: bold; */
-  float: left;
+  /* float: left; */
   margin-right: 20px;
-  width: 20%;
+  /* width: 20%; */
   font-size: 1.5em;
 }
 
@@ -226,21 +240,6 @@ export default {
   padding-right: 15px;
   background-color: white;
   border-radius: 15px;
-}
-
-.quick-search {
-  width: 30%;
-}
-
-.cta-line {
-  padding-left: 15px;
-  height: 50px;
-  display: flex;
-  align-content: center;
-}
-
-.cta-line label, .cta-line div {
-  padding-top: 10px;
 }
 
 .contact-list-container {
