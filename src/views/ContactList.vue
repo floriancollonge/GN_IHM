@@ -9,7 +9,7 @@
                 <v-data-table
                     :headers="datatable_headers"
                     :items="datatable_items"
-                    item-key="name"
+                    item-key="id_prospect"
                     loading-text="Loading... Please wait"
                     multi-sort
                     :search="search"
@@ -25,7 +25,7 @@
                   <v-toolbar
                     flat
                   >
-                    <v-toolbar-title class="contact-title">All contacts</v-toolbar-title>
+                    <v-toolbar-title class="contact-title">tous les contacts</v-toolbar-title>
                     <v-text-field
                         v-model="search"
                         class="quick-search"
@@ -47,15 +47,49 @@
                           v-bind="attrs"
                           v-on="on"
                         >
-                          New contact
+                          Nouveau contact
                         </v-btn>
                       </template>
                       <v-card>
                         <v-card-title>
+                          Ajouter un nouveau contact
                         </v-card-title>
             
                         <v-card-text>
                           <v-container>
+                            <v-text-field
+                              label="Prénom"
+                              v-model="dialogInfo.firstName"
+                              placeholder="John"
+                              autofocus
+                            ></v-text-field>
+                            <p v-if="errorLabels.firstName.length > 0" class="errorLabel">
+                              {{ errorLabels.firstName }}
+                            </p>
+                            <v-text-field
+                              label="Nom"
+                              v-model="dialogInfo.lastName"
+                              placeholder="Doe"
+                            ></v-text-field>
+                            <p v-if="errorLabels.lastName.length > 0" class="errorLabel">
+                              {{ errorLabels.lastName }}
+                            </p>
+                            <v-text-field
+                              label="Société"
+                              v-model="dialogInfo.companyName"
+                            ></v-text-field>
+                            <v-text-field
+                              label="N° de téléphone"
+                              v-model="dialogInfo.phone"
+                            ></v-text-field>
+                            <v-text-field
+                              label="Adresse mail"
+                              v-model="dialogInfo.mail"
+                            ></v-text-field>
+                            <p v-if="errorLabels.mail.length > 0" class="errorLabel">
+                              {{ errorLabels.mail }}
+                            </p>
+
                           </v-container>
                         </v-card-text>
             
@@ -64,14 +98,16 @@
                           <v-btn
                             color="blue darken-1"
                             text
+                            @click="cancel()"
                           >
-                            Cancel
+                            Annuler
                           </v-btn>
                           <v-btn
                             color="blue darken-1"
                             text
+                            @click="save()"
                           >
-                            Save
+                            Enregistrer
                           </v-btn>
                         </v-card-actions>
                       </v-card>
@@ -94,19 +130,47 @@
                       >fa-trash</v-icon
                     >
                   </template>
+                  <template v-slot:[`item.id_step`]="{ item }">
+                    <v-chip
+                      :color="getColor(item.id_step)"
+                      :text-color="getTextColor(item.id_step)"
+                      dark
+                    >
+                      {{ getLabel(item.id_step) }}
+                    </v-chip>
+                  </template>
               </v-data-table>
             </div>
         </div>
     </div>
 </template>
 <script>
-import axios from "axios"
+import { httpRequest } from "@/js/CommunicationHelper"
+import { steps } from "@/js/resources.ts"
+
 export default {
   name: "ContactList",
   data() {
     return {
       search: "",
       dialog: false,
+      errorLabels: {
+        lastName: "",
+        firstName: "",
+        mail: "",
+        messages: {
+          empty: "Champ obligatoire"
+        }
+      },
+      dialogInfo: {
+        lastName: "",
+        firstName: "",
+        companyName: "",
+        phone: "",
+        idStep: steps.find(step => step.code == "PROSPECT").id,
+        mail: "",
+        idUser: ""
+      },
       datatable_headers: [
         {
           text: "Name",
@@ -139,89 +203,92 @@ export default {
           sortable: false
         }
       ],
-      datatable_items: [{
-        name: "Adrien",
-        company_name: "Test"
-      },{
-        name: "Adrien2",
-        company_name: "Test"
-      },{
-        name: "Adrien3",
-        company_name: "Test2"
-      },{
-        name: "Adrien4",
-        company_name: "Test2"
-      },{
-        name: "Adrien5",
-        company_name: "Test3"
-      },{
-        name: "Adrien6",
-        company_name: "Test3"
-      },{
-        name: "Adrien7",
-        company_name: "Test4"
-      },{
-        name: "Adrien8",
-        company_name: "Test4"
-      },{
-        name: "Adrien9",
-        company_name: "Test5"
-      },{
-        name: "Adrien10",
-        company_name: "Test5"
-      },{
-        name: "Adrien11",
-        company_name: "Test6"
-      },{
-        name: "Adrien12",
-        company_name: "Test6"
-      },{
-        name: "Adrien13",
-        company_name: "Test7"
-      },{
-        name: "Adrien14",
-        company_name: "Test7"
-      },{
-        name: "Adrien15",
-        company_name: "Test7"
-      },{
-        name: "Adrien16",
-        company_name: "Test8"
-      },{
-        name: "Adrien17",
-        company_name: "Test8"
-      },{
-        name: "Adrien18",
-        company_name: "Test5"
-      },{
-        name: "Adrien19",
-        company_name: "Test4"
-      },{
-        name: "Adrien 20",
-        company_name: "Test2"
-      },{
-        name: "Adrien 21",
-        company_name: "Test"
-      }
-      ]
+      datatable_items: []
     }
   },
   created() {
-    var instance = this;
-    axios
-      .get('http://localhost:5003/v1/prospects')
-      .then(function (response) {
-        instance.contacts = Object.assign([], response.data);
-      })
-      .catch(error => console.log(error));
+    this.list();
   },
   methods: {
-
+    list() {
+      let instance = this;
+      httpRequest('/v1/prospects', 'get', null)
+        .then(function (response) {
+          instance.datatable_items = Object.assign([], []);
+          response.data.forEach(function (contact) {
+            instance.datatable_items.push({
+              name: contact.firstName + " " + contact.lastName,
+              company_name: contact.companyName,
+              id_step: contact.idStep,
+              id_tag: contact.idTag,
+              id_prospect: contact.idProspect
+            })
+          });
+        })
+        .catch(error => console.log(error));
+    },
+    cancel() {
+      this.dialogInfo = Object.assign(
+        {},
+        {
+          firstName: "",
+          lastName: "",
+          companyName: "",
+          phone: "",
+          mail: "",
+          id_step: steps.find(step => step.code == "PROSPECT").id
+        }
+      )
+      this.dialog = false;
+    },
+    save() {
+      if (this.validateInputs()) {
+        let instance = this;
+        instance.dialogInfo.idUser = sessionStorage.getItem("idUser");
+        httpRequest('/v1/prospect', 'post', instance.dialogInfo)
+          .then(function () {
+            instance.cancel();
+            instance.list();
+          })
+          .catch(error => console.log(error));
+      }
+    },
+    validateInputs () {
+      if (this.dialogInfo.firstName.length == 0) {
+        this.errorLabels.firstName = this.errorLabels.messages.empty;
+        return false;
+      }
+      if (this.dialogInfo.lastName.length == 0) {
+        this.errorLabels.lastName = this.errorLabels.messages.empty;
+        return false;
+      }
+      if (this.dialogInfo.mail.length == 0) {
+        this.errorLabels.mail = this.errorLabels.messages.empty;
+        return false;
+      }
+      return true;
+    },
+    getColor(id_step) {
+      return steps.find(step => step.id == id_step).color;
+    },
+    getTextColor(id_step) {
+      return steps.find(step => step.id == id_step).text_color;
+    },
+    getLabel(id_step) {
+      return steps.find(step => step.id == id_step).name;
+    }
   }
 }
 </script>
 
 <style scoped>
+
+.v-chip {
+  width: 130px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
 
 .v-card {
     box-shadow: none !important;
